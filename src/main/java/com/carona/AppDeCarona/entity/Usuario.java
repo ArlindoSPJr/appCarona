@@ -2,7 +2,6 @@ package com.carona.AppDeCarona.entity;
 
 import com.carona.AppDeCarona.controller.dto.Usuario.CriarUsuarioDto;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
@@ -40,12 +39,15 @@ public class Usuario implements UserDetails {
     @Min(0)
     private int avaliacao;
 
+    private int quantidadeAvaliacoes;
+
     public Usuario() {}
 
     public Usuario(CriarUsuarioDto dto){
         this.email = dto.email();
         this.nome = dto.nome();
         this.password = dto.password();
+        this.quantidadeAvaliacoes = 0;
     }
 
     public Long getUsuarioId() {
@@ -116,6 +118,14 @@ public class Usuario implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public int getQuantidadeAvaliacoes() {
+        return quantidadeAvaliacoes;
+    }
+
+    public void setQuantidadeAvaliacoes(int quantidadeAvaliacoes) {
+        this.quantidadeAvaliacoes = quantidadeAvaliacoes;
     }
 
     

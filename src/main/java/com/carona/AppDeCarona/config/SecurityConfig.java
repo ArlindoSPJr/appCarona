@@ -66,7 +66,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Configura CORS
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/login", "/usuario").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/login", "/usuario", "/api/distancia").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/distancia").permitAll() // <-- Adicione esta linha
                         .requestMatchers("/v3/api-docs/*", "/swagger-ui.html", "/swagger-ui/*").permitAll()
                         .anyRequest().authenticated() // Exige autenticação para outras requisições
                 )
