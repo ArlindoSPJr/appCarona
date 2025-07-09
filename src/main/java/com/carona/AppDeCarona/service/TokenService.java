@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.carona.AppDeCarona.entity.Admin;
+import com.carona.AppDeCarona.entity.Usuario;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,12 @@ public class TokenService {
                 login = admin.getEmail();
                 id = admin.getAdminId();
                 role = "ROLE_ADMIN";  // Adiciona prefixo ROLE_
-            }else {
+            } else if (user instanceof Usuario usuario){
+                login = usuario.getEmail();
+                id = usuario.getUsuarioId();
+                role = "ROLE_USUARIO";
+            }
+            else {
                 throw new IllegalArgumentException("Tipo de usuário desconhecido");
             }
 
@@ -53,7 +59,7 @@ public class TokenService {
         try {
             var algoritmo = Algorithm.HMAC256(secret);
             return JWT.require(algoritmo)
-                    .withIssuer("DistribuidoraMp")
+                    .withIssuer("AppCarona")
                     .build()
                     .verify(tokenJWT)
                     .getSubject();
@@ -66,7 +72,7 @@ public class TokenService {
         try {
             var algoritmo = Algorithm.HMAC256(secret);
             return JWT.require(algoritmo)
-                    .withIssuer("DistribuidoraMp")
+                    .withIssuer("AppCarona")
                     .build()
                     .verify(tokenJWT)
                     .getClaim("roles").asList(String.class); // Extrai como lista

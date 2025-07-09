@@ -1,7 +1,7 @@
 package com.carona.AppDeCarona.config;
 
-
 import com.carona.AppDeCarona.repository.AdminRepository;
+import com.carona.AppDeCarona.repository.UsuarioRepository;
 import com.carona.AppDeCarona.service.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -30,6 +30,9 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Autowired
     private AdminRepository adminRepository;
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -53,6 +56,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
             } catch (RuntimeException ex) {
+                ex.printStackTrace();
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("Token inválido: " + ex.getMessage());
                 return;
@@ -63,10 +67,14 @@ public class SecurityFilter extends OncePerRequestFilter {
     }
 
     private UserDetails buscarUsuario(String email) {
-        Optional<? extends UserDetails> usuario;
+        UserDetails usuario = adminRepository.findByEmail(email);
+        if (usuario != null)
+            return usuario;
 
-        usuario = Optional.ofNullable(adminRepository.findByEmail(email));
-        if (usuario.isPresent()) return usuario.get();
+        usuario = usuarioRepository.findByEmail(email);
+        if (usuario != null)
+            return usuario;
+
         return null;
     }
 }
