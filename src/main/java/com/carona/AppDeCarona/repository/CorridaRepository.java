@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.carona.AppDeCarona.entity.Corrida;
 
+
 public interface CorridaRepository extends JpaRepository<Corrida, Long> {
-    
+    Corrida findByCorridaId(Long corridaId);
 }

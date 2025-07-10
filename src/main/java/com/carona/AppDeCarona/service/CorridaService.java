@@ -13,6 +13,8 @@ import com.carona.AppDeCarona.entity.enums.StatusCorrida;
 import com.carona.AppDeCarona.repository.CorridaRepository;
 import com.carona.AppDeCarona.repository.UsuarioRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class CorridaService {
 
@@ -55,5 +57,37 @@ public class CorridaService {
                 .stream()
                 .map(DetalharCorridaDto::new)
                 .toList();
+    }
+
+    public void iniciarCorrida(Long corridaId) {
+        var corrida = buscarCorridaPeloId(corridaId);
+        corrida.setStatusCorrida(StatusCorrida.INICIADA);
+        corridaRepository.save(corrida);
+    }
+
+    public void cancelarCorrida(Long corridaId) {
+        var corrida = buscarCorridaPeloId(corridaId);
+        if (!corrida.getStatusCorrida().equals(StatusCorrida.CONFIRMADA)) {
+            throw new IllegalStateException("Não é possivel cancelar uma corrida que ja foi iniciada ou finalizada!");
+        }
+        corrida.setStatusCorrida(StatusCorrida.CANCELADA);
+        corridaRepository.save(corrida);
+    }
+
+    public void finalizarCorrida(Long corridaId){
+        var corrida = buscarCorridaPeloId(corridaId);
+        if (!corrida.getStatusCorrida().equals(StatusCorrida.INICIADA)) {
+            throw new IllegalStateException("Não é possivel finalizar uma corrida que não foi iniciada!");
+        }
+        corrida.setStatusCorrida(StatusCorrida.FINALIZADA);
+        corridaRepository.save(corrida);
+    }
+
+    private Corrida buscarCorridaPeloId(Long corridaId) {
+        var corrida = corridaRepository.findByCorridaId(corridaId);
+        if (corrida == null) {
+            throw new EntityNotFoundException("Corrida não encontrada com ID: " + corridaId);
+        }
+        return corrida;
     }
 }

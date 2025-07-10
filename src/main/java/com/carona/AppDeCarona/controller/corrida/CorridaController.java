@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +34,23 @@ public class CorridaController {
     public ResponseEntity<List<DetalharCorridaDto>> listarCorridas(){
         var corridas = corridaService.listarCorridas();
         return ResponseEntity.ok(corridas);
+    }
+
+    @PatchMapping("/cancelar/{corridaId}")
+    public ResponseEntity cancelarCorrida(@PathVariable Long corridaId){
+        corridaService.cancelarCorrida(corridaId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/iniciar/{corridaId}")
+    public ResponseEntity iniciarCorrida(@PathVariable Long corridaId){
+        corridaService.iniciarCorrida(corridaId);
+        return ResponseEntity.ok().build();
+    }
+    @PatchMapping("/finalizar/{corridaId}")
+    public ResponseEntity finalizarCorrida(@PathVariable Long corridaId){
+        corridaService.finalizarCorrida(corridaId);
+        return ResponseEntity.ok().build();
     }
 
 }
