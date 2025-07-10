@@ -4,11 +4,13 @@ import com.carona.AppDeCarona.controller.dto.Usuario.CriarUsuarioDto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
@@ -40,6 +42,9 @@ public class Usuario implements UserDetails {
     private int avaliacao;
 
     private int quantidadeAvaliacoes;
+
+    @OneToMany(mappedBy = "motorista", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Corrida> corridas;
 
     public Usuario() {}
 
