@@ -36,9 +36,12 @@ public class CorridaService {
                 .block();
 
         Corrida corrida = new Corrida(dto, motorista);
-        corrida.setDuracao(distanciaEDuracao.getDuracao());
+        double duracaoSegundos = distanciaEDuracao.getDuracao();
+        double duracaoHoras = duracaoSegundos / 3600.0;
+        corrida.setDuracao(duracaoHoras);
         var previsaoDeChegada = dto.dataDeSaida().atTime(dto.horarioDeSaida())
-                .plusMinutes((long) (distanciaEDuracao.getDuracao() * 60));
+                .plusMinutes((long) (duracaoHoras * 60));
+
         corrida.setPrevisaoDeChegada(previsaoDeChegada);
         corrida.setStatusCorrida(StatusCorrida.CONFIRMADA);
         corridaRepository.save(corrida);
