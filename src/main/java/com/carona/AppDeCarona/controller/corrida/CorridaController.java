@@ -2,6 +2,7 @@ package com.carona.AppDeCarona.controller.corrida;
 
 import java.util.List;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import com.carona.AppDeCarona.controller.dto.corrida.AvaliarMotoristaDto;
 import com.carona.AppDeCarona.controller.dto.corrida.CreateCorridaDto;
 import com.carona.AppDeCarona.controller.dto.corrida.DetalharCorridaDto;
 import com.carona.AppDeCarona.service.CorridaService;
@@ -47,9 +50,16 @@ public class CorridaController {
         corridaService.iniciarCorrida(corridaId);
         return ResponseEntity.ok().build();
     }
+
     @PatchMapping("/finalizar/{corridaId}")
     public ResponseEntity finalizarCorrida(@PathVariable Long corridaId){
         corridaService.finalizarCorrida(corridaId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/avaliarMotorista/{corridaId}")
+    public ResponseEntity avaliarMotorista(@PathVariable Long corridaId, @RequestBody AvaliarMotoristaDto dto){
+        corridaService.avaliarMotorista(dto, corridaId);
         return ResponseEntity.ok().build();
     }
 

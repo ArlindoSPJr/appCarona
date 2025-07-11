@@ -39,7 +39,7 @@ public class Usuario implements UserDetails {
     private String password;
 
     @Min(0)
-    private int avaliacao;
+    private double avaliacao;
 
     private int quantidadeAvaliacoes;
 
@@ -87,11 +87,11 @@ public class Usuario implements UserDetails {
         this.password = password;
     }
 
-    public int getAvaliacao() {
+    public double getAvaliacao() {
         return avaliacao;
     }
 
-    public void setAvaliacao(int avaliacao) {
+    public void setAvaliacao(double avaliacao) {
         this.avaliacao = avaliacao;
     }
 

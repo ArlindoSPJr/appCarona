@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.carona.AppDeCarona.controller.dto.corrida.AvaliarMotoristaDto;
 import com.carona.AppDeCarona.controller.dto.corrida.CreateCorridaDto;
 import com.carona.AppDeCarona.controller.dto.corrida.DetalharCorridaDto;
 import com.carona.AppDeCarona.entity.Corrida;
@@ -74,13 +75,30 @@ public class CorridaService {
         corridaRepository.save(corrida);
     }
 
-    public void finalizarCorrida(Long corridaId){
+    public void finalizarCorrida(Long corridaId) {
         var corrida = buscarCorridaPeloId(corridaId);
         if (!corrida.getStatusCorrida().equals(StatusCorrida.INICIADA)) {
             throw new IllegalStateException("Não é possivel finalizar uma corrida que não foi iniciada!");
         }
         corrida.setStatusCorrida(StatusCorrida.FINALIZADA);
         corridaRepository.save(corrida);
+    }
+
+    public void avaliarMotorista(AvaliarMotoristaDto dto, Long corridaId) {
+        var corrida = buscarCorridaPeloId(corridaId);
+        if (!corrida.getStatusCorrida().equals(StatusCorrida.FINALIZADA)) {
+            throw new IllegalStateException("Não é possivel avaliar um motorista sem que a corrida esteja finalizada!");
+        }
+        if (dto.nota() < 0 || dto.nota() > 5) {
+            throw new IllegalArgumentException("A avaliação deve ser entre 0 e 5!");
+        }
+        var motorista = corrida.getMotorista();
+        double mediaAnterior = motorista.getAvaliacao();
+        int quantidadeAnterior = motorista.getQuantidadeAvaliacoes();
+        double novaMedia = ((mediaAnterior * quantidadeAnterior) + dto.nota()) / (quantidadeAnterior + 1);
+        motorista.setAvaliacao(novaMedia);
+        motorista.setQuantidadeAvaliacoes(quantidadeAnterior + 1);
+        usuarioRepository.save(motorista);
     }
 
     private Corrida buscarCorridaPeloId(Long corridaId) {
