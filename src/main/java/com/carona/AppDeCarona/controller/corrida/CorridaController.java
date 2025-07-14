@@ -17,7 +17,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.carona.AppDeCarona.controller.dto.corrida.AvaliarMotoristaDto;
 import com.carona.AppDeCarona.controller.dto.corrida.CreateCorridaDto;
 import com.carona.AppDeCarona.controller.dto.corrida.DetalharCorridaDto;
+import com.carona.AppDeCarona.controller.dto.corrida.EntrarNaCorridaDTO;
 import com.carona.AppDeCarona.service.CorridaService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/corrida")
@@ -27,7 +30,7 @@ public class CorridaController {
     private CorridaService corridaService;
 
     @PostMapping
-    public ResponseEntity<DetalharCorridaDto> criarCorrida(@RequestBody CreateCorridaDto dto, UriComponentsBuilder uriBuilder){
+    public ResponseEntity<DetalharCorridaDto> criarCorrida(@RequestBody @Valid CreateCorridaDto dto, UriComponentsBuilder uriBuilder){
         var corrida = corridaService.criarCorrida(dto);
         var uri = uriBuilder.path("/corrida/{id}").buildAndExpand(corrida.getCorridaId()).toUri();
         return ResponseEntity.created(uri).body(new DetalharCorridaDto(corrida));
@@ -61,6 +64,12 @@ public class CorridaController {
     public ResponseEntity avaliarMotorista(@PathVariable Long corridaId, @RequestBody AvaliarMotoristaDto dto){
         corridaService.avaliarMotorista(dto, corridaId);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/entrarNaCorrida")
+    public ResponseEntity<DetalharCorridaDto> entrarNaCorrida(@RequestBody EntrarNaCorridaDTO dto){
+        var corrida = corridaService.entrarNaCorrida(dto.corridaId(), dto.passageiroId());
+        return ResponseEntity.ok().body(new DetalharCorridaDto(corrida));
     }
 
 }

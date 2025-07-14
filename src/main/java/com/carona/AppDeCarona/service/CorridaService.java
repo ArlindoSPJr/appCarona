@@ -108,4 +108,28 @@ public class CorridaService {
         }
         return corrida;
     }
+
+    public Corrida entrarNaCorrida(Long corridaId, Long usuarioId){
+        var corrida = corridaRepository.findByCorridaId(corridaId);
+        var passageiro = usuarioRepository.findByUsuarioId(usuarioId);
+        if (verificarCapacidade(corridaId)) {
+            corrida.setCapacidade(corrida.getCapacidade() - 1);
+            corrida.addPassageiro(passageiro);
+            passageiro.setCorrida(corrida);
+        }
+        
+        corridaRepository.save(corrida);
+        return corrida;
+
+    }
+
+    private boolean verificarCapacidade(Long corridaId){
+        var corrida = corridaRepository.findByCorridaId(corridaId);
+        if (corrida.getCapacidade() == 0) {
+            throw new IllegalStateException("Corrida sem disponibilidade!");
+        }
+
+        return true;
+    }
+
 }

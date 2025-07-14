@@ -3,9 +3,12 @@ package com.carona.AppDeCarona.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.carona.AppDeCarona.controller.dto.corrida.CreateCorridaDto;
 import com.carona.AppDeCarona.entity.enums.StatusCorrida;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,7 +18,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
@@ -40,16 +47,20 @@ public class Corrida {
     @JoinColumn(name = "motorista_id")
     private Usuario motorista;
 
-    
+    @OneToMany(mappedBy = "corrida")
+    @JsonManagedReference
+    private List<Usuario> passageiros = new ArrayList<>();
+
     private LocalDate dataDeSaida;
 
-   
     private LocalTime horarioDeSaida;
 
     private LocalDateTime previsaoDeChegada;
 
     @Enumerated(EnumType.STRING)
     private StatusCorrida statusCorrida;
+
+    private int capacidade;
 
     public Corrida() {}
 
@@ -59,6 +70,11 @@ public class Corrida {
         this.motorista = motorista;
         this.horarioDeSaida = dto.horarioDeSaida();
         this.dataDeSaida = dto.dataDeSaida();
+        this.capacidade = dto.capacidade();
+    }
+
+    public void addPassageiro(Usuario usuario){
+        this.passageiros.add(usuario);
     }
 
     public Long getCorridaId() {
@@ -131,6 +147,22 @@ public class Corrida {
 
     public void setDataDeSaida(LocalDate dataDeSaida) {
         this.dataDeSaida = dataDeSaida;
+    }
+
+    public int getCapacidade() {
+        return capacidade;
+    }
+
+    public void setCapacidade(int capacidade) {
+        this.capacidade = capacidade;
+    }
+
+    public List<Usuario> getPassageiros() {
+        return passageiros;
+    }
+
+    public void setPassageiros(List<Usuario> passageiros) {
+        this.passageiros = passageiros;
     }
 
     

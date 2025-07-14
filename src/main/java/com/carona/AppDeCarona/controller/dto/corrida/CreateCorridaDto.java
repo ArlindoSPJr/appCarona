@@ -7,6 +7,7 @@ public record CreateCorridaDto(String localDeOrigem,
                                String localDeDestino,
                                String motorista,
                                LocalTime horarioDeSaida,
-                               LocalDate dataDeSaida ) {
+                               LocalDate dataDeSaida,
+                               int capacidade ) {
 
 }

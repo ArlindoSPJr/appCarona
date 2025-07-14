@@ -1,6 +1,8 @@
 package com.carona.AppDeCarona.entity;
 
 import com.carona.AppDeCarona.controller.dto.Usuario.CriarUsuarioDto;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -10,6 +12,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
@@ -45,6 +49,11 @@ public class Usuario implements UserDetails {
 
     @OneToMany(mappedBy = "motorista", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Corrida> corridas;
+
+    @ManyToOne
+    @JoinColumn(name = "corrida_id")
+    @JsonBackReference
+    private Corrida corrida;
 
     public Usuario() {}
 
@@ -131,6 +140,14 @@ public class Usuario implements UserDetails {
 
     public void setQuantidadeAvaliacoes(int quantidadeAvaliacoes) {
         this.quantidadeAvaliacoes = quantidadeAvaliacoes;
+    }
+
+    public Corrida getCorrida() {
+        return corrida;
+    }
+
+    public void setCorrida(Corrida corrida) {
+        this.corrida = corrida;
     }
 
     

@@ -3,28 +3,34 @@ package com.carona.AppDeCarona.controller.dto.corrida;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 import com.carona.AppDeCarona.entity.Corrida;
+import com.carona.AppDeCarona.entity.Usuario;
 
 public record DetalharCorridaDto(
+        int capacidade,
         String localDeOrigem,
         String localDeDestino,
         String motorista,
         LocalTime horarioDeSaida,
         LocalDateTime previsaoDeChegada,
         LocalDate dataDeSaida,
-        String duracao // Agora vem formatado como HH:mm
+        String duracao, // Agora vem formatado como HH:mm
+        List<Usuario> passageiros
 ) {
 
     public DetalharCorridaDto(Corrida corrida) {
         this(
+            corrida.getCapacidade(),
             corrida.getLocalDeOrigem(),
             corrida.getLocalDeDestino(),
             corrida.getMotorista().getNome(),
             corrida.getHorarioDeSaida(),
             corrida.getPrevisaoDeChegada(),
             corrida.getDataDeSaida(),
-            formatarDuracao(corrida.getDuracao())
+            formatarDuracao(corrida.getDuracao()),
+            corrida.getPassageiros()
         );
     }
 

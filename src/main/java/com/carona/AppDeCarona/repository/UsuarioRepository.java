@@ -5,6 +5,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import com.carona.AppDeCarona.entity.Usuario;
+import java.util.List;
+
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
@@ -14,6 +16,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
     UserDetails findByEmail(String email);
 
     Usuario findByNome(String nome);
+
+    Usuario findByUsuarioId(Long usuarioId);
 
     
     
